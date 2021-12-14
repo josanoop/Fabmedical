@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"api"},"name":"api","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"api"}},"strategy":{"maxSurge":1,"maxUnavailable":1,"rollingUpdate":null,"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"api","name":"api"}},"spec":{"containers":[{"image":"acr507381.azurecr.io/content-api","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/","port":3001},"initialDelaySeconds":30,"periodSeconds":20,"timeoutSeconds":10},"name":"api","ports":[{"containerPort":3001,"hostPort":3001,"protocol":"TCP"}],"resources":{"requests":{"cpu":1,"memory":"128Mi"}},"securityContext":{"dnsPolicy":"ClusterFirst","privileged":false,"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"terminationGracePeriodSeconds":30,"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}}]}}}}
+  creationTimestamp: "2021-12-14T09:18:50Z"
+  generation: 1
+  labels:
+    app: api
+  name: api
+  namespace: default
+  resourceVersion: "33522"
+  selfLink: /apis/apps/v1/namespaces/default/deployments/api
+  uid: b5752aa6-cecb-4b58-b056-c6a71dd27653
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: api
+        name: api
+    spec:
+      containers:
+      - image: acr507381.azurecr.io/content-api
+        env:
+        - name: MONGODB_CONNECTION
+          valueFrom:
+            secretKeyRef:
+              name: cosmosdb
+              key: db
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 3001
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: api
+        ports:
+        - containerPort: 3001
+          hostPort: 3001
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "1"
+            memory: 128Mi
+        securityContext:
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  conditions:
+  - lastTransitionTime: "2021-12-14T09:18:50Z"
+    lastUpdateTime: "2021-12-14T09:19:04Z"
+    message: ReplicaSet "api-f64cbc6c6" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2021-12-14T09:28:43Z"
+    lastUpdateTime: "2021-12-14T09:28:43Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  observedGeneration: 1
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
