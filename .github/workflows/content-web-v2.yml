@@ -77,7 +77,6 @@ jobs:
       uses: azure/k8s-deploy@v1
       with:
         manifests: |
-          api.deployment.yml
           web.deployment.yml
           web.service.yml
         images: |
